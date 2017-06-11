@@ -61,7 +61,15 @@ class InformationRetrieval {
 
     private List<String> normalize(List<CoreLabel> tokenList) {
         List<String> result = new ArrayList<>();
-        tokenList.forEach(token -> result.add(token.toString()));
+        for (CoreLabel coreLabel : tokenList) {
+            if (coreLabel.toString().toLowerCase().equals("e.u")) {
+                result.add("eu");
+            } else if(coreLabel.toString().toLowerCase().equals("u.k.i.p")) {
+                result.add("ukip");
+            } else {
+                result.add(coreLabel.value());
+            }
+        }
         return result;
     }
 
