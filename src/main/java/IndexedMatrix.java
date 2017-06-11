@@ -36,6 +36,19 @@ class IndexedMatrix {
     }
 
     public List<Integer> getValues(String key) {
-        return dictionary.get(key);
+        if (dictionary.get(key) != null) {
+            return new ArrayList<>(dictionary.get(key));
+        } else {
+            return new ArrayList<>();
+        }
+    }
+
+    public List<Integer> getAllTexts() {
+        Collection<List<Integer>> l = dictionary.values();
+        TreeSet<Integer> set = new TreeSet<>();
+        for (List<Integer> integers : l) {
+            set.addAll(integers);
+        }
+        return new ArrayList<>(set);
     }
 }

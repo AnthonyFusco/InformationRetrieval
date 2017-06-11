@@ -13,22 +13,38 @@ class InformationRetrieval {
     private List<String> stopWordList = Arrays.asList("the", "a", "to", "of", ",", ".",
             "'s", "?", ":", "-", "http://", "https://", "\"", "'", "`", "''");
 
+    private List<String> articles = Arrays.asList("1.txt", "2.txt", "3.txt", "4.txt", "5.txt",
+            "6.txt", "7.txt", "8.txt", "9.txt", "10.txt");
+
     InformationRetrieval() {
     }
 
     public void compute() {
-        List<String> articles = Arrays.asList("1.txt", "2.txt", "3.txt", "4.txt", "5.txt",
-                "6.txt", "7.txt", "8.txt", "9.txt", "10.txt");
+
         List<List<String>> tokenList = parse(articles);
-        //tokenList.forEach(System.out::println);
+
         IndexedMatrix matrix = new IndexedMatrix(tokenList);
+
         System.out.println(matrix);
 
         QueryEngine queryEngine = new QueryEngine(matrix);
-        System.out.println("Cleese AND Pythons : " + queryEngine.intersect("Cleese", "Pythons"));
-        System.out.println("Cleese AND Python : " + queryEngine.intersect("Cleese", "Python"));
-        System.out.println("Brexit AND negative : " + queryEngine.intersect("Brexit", "negative"));
-        System.out.println("UKIP AND market : " + queryEngine.intersect("UKIP", "market"));
+
+        System.out.println("Brexit AND Negative : " +
+                queryEngine.intersect("Brexit", "Negative"));
+
+        System.out.println("UKIP AND NOT (bill or market) : " +
+                queryEngine.intersect(
+                        "UKIP", queryEngine.not(queryEngine.or("bill", "market"))
+                )
+        );
+
+        System.out.println("(withdrawal OR EU) AND NOT (Scotland OR consequences) : " +
+                queryEngine.intersect(
+                        queryEngine.or("withdrawal", "EU"),
+                        queryEngine.not(queryEngine.or("Scotland", "consequences"))
+                )
+        );
+
     }
 
     private List<CoreLabel> tokenize(String path) {
